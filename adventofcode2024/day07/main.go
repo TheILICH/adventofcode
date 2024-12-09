@@ -133,7 +133,6 @@ var (
 
 func first() {
 
-    var a [][]byte
     end := false
     for !end {
 
@@ -144,64 +143,16 @@ func first() {
 
         line = strings.TrimSpace(line)
 
-        a = append(a, []byte(line))
-    }
-
-    n, m := len(a), len(a[0])
-    sx, sy := -1, -1
-    for i := 0; i < n; i++ {
-        for j := 0; j < m; j++ {
-            if a[i][j] == '^' {
-                sx, sy = i, j
-                break
-            }
-        }
-    }
-
-    P := func(x, y int) bool {
-        return x >= 0 && y >= 0 && x < n && y < m
-    }
-
-
-    dx := []int{-1, 0, +1, 0}
-    dy := []int{0, +1, 0, -1}
-    cnt, k := 0, 0
-
-    for P(sx, sy) {
-
-        a[sx][sy] = 'X'
-        i, j := sx + dx[k], sy + dy[k]
-        if !P(i, j) {
-            break
-        }
         
-        if a[i][j] == '#' {
-            k = (k + 1) % 4
-            continue
-        }
 
-        sx, sy = i, j
+
     }
-
-    for i := 0; i < n; i++ {
-        for j := 0; j < m; j++ {
-            if a[i][j] == 'X' {
-                cnt++
-            }
-        }
-    }
-
-
-
-    fprintf("CNT = %d\n", cnt)
-
 
 
 }
 
 func second() {
 
-    var b [][]byte
     end := false
     for !end {
 
@@ -211,81 +162,7 @@ func second() {
         }
 
         line = strings.TrimSpace(line)
-
-        b = append(b, []byte(line))
     }
-
-    n, m := len(b), len(b[0])
-    x, y := -1, -1
-    for i := 0; i < n; i++ {
-        for j := 0; j < m; j++ {
-            if b[i][j] == '^' {
-                x, y = i, j
-                break
-            }
-        }
-    }
-
-    P := func(x, y int) bool {
-        return x >= 0 && y >= 0 && x < n && y < m
-    }
-
-    a := make([][]byte, n)
-    for i := 0; i < n; i++ {
-        a[i] = make([]byte, m)
-    }
-    for i := 0; i < n; i++ {
-        for j := 0; j < m; j++ {
-            a[i][j] = b[i][j]
-        }
-    }
-
-    dx := []int{-1, 0, +1, 0}
-    dy := []int{0, +1, 0, -1}
-    cnt := 0
-    mx := n * m + 500
-
-    for ii := 0; ii < n; ii++ {
-        for jj := 0; jj < m; jj++ {
-            a[ii][jj] = '#'
-
-            it := 0
-            sx, sy := x, y
-            k := 0
-            for P(sx, sy) {
-
-                it++
-                i, j := sx + dx[k], sy + dy[k]
-                if !P(i, j) {
-                    break
-                }
-
-                if it > mx {
-                    cnt++
-                    break
-                }
-                
-                if a[i][j] == '#' {
-                    k = (k + 1) % 4
-                    continue
-                }
-
-                sx, sy = i, j
-            }
-
-            for i := 0; i < n; i++ {
-                for j := 0; j < m; j++ {
-                    a[i][j] = b[i][j]
-                }
-            }
-
-
-        }
-    }
-
-
-
-    fprintf("CNT = %d\n", cnt)
 
 
 
@@ -314,8 +191,8 @@ func main() {
     r = bufio.NewReader(os.Stdin)
     w = bufio.NewWriter(os.Stdout)
 
-    // file_name := "example.txt"
-    file_name := "f.in"
+    file_name := "example.txt"
+    // file_name := "f.in"
  
     fin, _ := os.Open(file_name)
     defer fin.Close()
@@ -332,8 +209,8 @@ func main() {
     // fscanf("%d\n", &tt)
  
     for i := 0; i < tt; i++ {
-        // first()
-        second()
+        first()
+        // second()
     }
  
 }
