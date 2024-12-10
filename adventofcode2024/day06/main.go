@@ -311,7 +311,7 @@ func fprintf(format string, a ...any) {
  
 func main() {
  
-    r = bufio.NewReader(os.Stdin)
+    // r = bufio.NewReader(os.Stdin)
     w = bufio.NewWriter(os.Stdout)
 
     // file_name := "example.txt"
