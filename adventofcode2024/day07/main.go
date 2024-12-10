@@ -12,7 +12,7 @@ import (
     "bufio"
 
     "strings"
-    // "strconv"
+    "strconv"
     // "regexp"
     // "math"
     // "cmp"
@@ -133,6 +133,7 @@ var (
 
 func first() {
 
+    sm := 0
     end := false
     for !end {
 
@@ -142,17 +143,53 @@ func first() {
         }
 
         line = strings.TrimSpace(line)
+        s := strings.Split(line, " ")
+        n := len(s)
 
+        check, _ := strconv.Atoi(s[0][:len(s[0]) - 1])
+
+        a := make([]int, n - 1)
+        for i := 1; i < n; i++ {
+            a[i - 1], _ = strconv.Atoi(s[i])
+        }
+        b := make([]int, n - 1)
+        m := n - 1
+
+        C := func() {
+            for i := 0; i < m; i++ {
+                b[i] = a[i]
+            }
+        }
         
+        stop := false
+        for i := 0; i <= (1 << m) && !stop; i++ {
+            C()
+            for j := 1; j < m; j++ {
+                if (1 << (j - 1)) & i != 0 {
+                    b[j] *= b[j - 1]
+                } else {
+                    b[j] += b[j - 1]
+                }
+            }
+
+            if b[m - 1] == check {
+                sm += check
+                stop = true
+                break
+            }
+        }
 
 
     }
+
+    fprintf("SM = %d\n", sm)
 
 
 }
 
 func second() {
 
+    sm := 0
     end := false
     for !end {
 
@@ -162,7 +199,59 @@ func second() {
         }
 
         line = strings.TrimSpace(line)
+
+        s := strings.Split(line, " ")
+        check, _ := strconv.Atoi(s[0][:len(s[0]) - 1])
+        
+        n := len(s)
+        b := make([]int, n - 1)
+        for i := 1; i < n; i++ {
+            b[i - 1], _ = strconv.Atoi(s[i])
+        }
+        m := n - 1
+
+        var R func(idx int) bool 
+        R = func(idx int) bool {
+
+            if idx == m {
+                if b[m - 1] == check {
+                    // fprintf("check = %d\n", check)
+                    sm += check
+                    return true
+                }
+                
+                return false
+            }
+
+            og := b[idx]
+            
+            b[idx] = og + b[idx - 1]
+            if R(idx + 1) {
+                return true
+            }
+            
+            b[idx] = og * b[idx - 1]
+            if R(idx + 1) {
+                return true
+            }
+
+            b[idx], _ = strconv.Atoi(strconv.Itoa(b[idx - 1]) + strconv.Itoa(og))
+            if R(idx + 1) {
+                return true
+            }
+            
+            b[idx] = og
+            
+            return false
+            
+        }
+
+        R(1)
+
+
     }
+
+    fprintf("SM = %d\n", sm)
 
 
 
@@ -191,8 +280,8 @@ func main() {
     r = bufio.NewReader(os.Stdin)
     w = bufio.NewWriter(os.Stdout)
 
-    file_name := "example.txt"
-    // file_name := "f.in"
+    // file_name := "example.txt"
+    file_name := "f.in"
  
     fin, _ := os.Open(file_name)
     defer fin.Close()
