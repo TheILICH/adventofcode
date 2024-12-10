@@ -133,6 +133,7 @@ var (
 
 func first() {
 
+    var a []int
     end := false
     for !end {
 
@@ -142,11 +143,84 @@ func first() {
         }
 
         line = strings.TrimSpace(line)
+        n := len(line)
+        sm := 0
+        for i := 0; i < n; i++ {
+            sm += int(line[i] - '0')
+        }
 
-        
+        id := 0
+        idx := 0
+        a = make([]int, sm)
+        for i := 0; i < n; i++ {
+            x := int(line[i] - '0')
+            if i % 2 == 0 {
+                for j := 0; j < x; j++ {
+                    a[idx] = id
+                    idx++
+                }
+                id++
+            } else {
+                for j := 0; j < x; j++ {
+                    a[idx] = -1
+                    idx++
+                }
+            }
+        }
 
     }
 
+    m := len(a)
+    dot := func() int {
+        first_dot := 0
+        for first_dot < m && a[first_dot] != -1 {
+            first_dot++
+        }
+
+        if first_dot == m - 1 && a[first_dot] != -1 {
+            return -1
+        }
+        return first_dot
+    }
+
+    check := func() bool {
+
+        last_number := m - 1
+        for last_number > -1 && a[last_number] == -1 {
+            last_number--
+        }
+
+        first_dot := dot()
+
+        return first_dot - 1 == last_number
+
+    }
+
+    for i := m - 1; i > -1 && !check(); i-- {
+
+        if a[i] > -1 {
+            first_dot := dot()
+            a[first_dot], a[i] = a[i], a[first_dot]
+        } 
+
+    }
+
+    // fprintf("\na = \n")
+    // for i := 0; i < m; i++ {
+    //     if a[i] > -1 {
+    //         fprintf("%d", a[i])
+    //     } else {
+    //         fprintf(".")
+    //     }
+    // }
+    // fprintf("\n\n")
+
+    res := 0
+    for i := 0; i < m && a[i] > -1; i++ {
+        res += a[i] * i
+    }
+
+    fprintf("RES = %d\n", res)
 
 
 
@@ -193,8 +267,8 @@ func main() {
     // r = bufio.NewReader(os.Stdin)
     w = bufio.NewWriter(os.Stdout)
 
-    file_name := "example.txt"
-    // file_name := "f.in"
+    // file_name := "example.txt"
+    file_name := "f.in"
  
     fin, _ := os.Open(file_name)
     defer fin.Close()
