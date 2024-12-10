@@ -133,7 +133,7 @@ var (
 
 func first() {
 
-    var a [][]byte
+    var b [][]byte
     end := false
     for !end {
 
@@ -143,15 +143,31 @@ func first() {
         }
 
         line = strings.TrimSpace(line)
-        a = append(a, []byte(line))
+        b = append(b, []byte(line))
 
     }
 
-    n, m := len(a), len(a[0])
+    
+    n, m := len(b), len(b[0])
+    a := make([][]byte, n)
+    for i := 0; i < n; i++ {
+        a[i] = make([]byte, m)
+    }
+
+    C := func() {
+        for i := 0; i < n; i++ {
+            for j := 0; j < m; j++ {
+                a[i][j] = b[i][j]
+            }
+        }
+    }
+
+    C()
+
     d := make(map[byte][]Pair)
     for i := 0; i < n; i++ {
         for j := 0; j < m; j++ {
-            if a[i][j] == '.' {
+            if a[i][j] == '.' || a[i][j] == '#' {
                 continue
             }
 
@@ -165,84 +181,38 @@ func first() {
         }
     }
     
-    // P := func(x, y int) bool {
-    //     return x >= 0 && y >= 0 && x < n && y < m
-    // }
-
-    D := func(x, y, xx, yy int) int {
-        return (abs(x - xx) * abs(x - xx)) + (abs(y - yy) * abs(y - yy))
+    P := func(x, y int) bool {
+        return x >= 0 && y >= 0 && x < n && y < m
     }
-    
+
     cnt := 0
     for _, v := range d {
         for i := 0; i < len(v); i++ {
             for j := i + 1; j < len(v); j++ {
 
-                for x := 0; x < n; x++ {
-                    for y := 0; y < m; y++ {
-                        if a[x][y] != '.' && a[x][y] != '#' {
-                            continue
-                        }
-                        if D(x, y, v[i].first, v[i].second) == 2 * D(x, y, v[j].first, v[j].second) {
-                            cnt++
-                            a[x][y] = '#'
-                        }
-                        if D(x, y, v[i].first, v[i].second) * 2 == D(x, y, v[j].first, v[j].second) {
-                            cnt++
-                            a[x][y] = '#'
-                        }
-                    }
+                row_diff := v[j].first - v[i].first
+                col_diff := v[j].second - v[i].second
+                up := Pair{
+                    first: v[i].first - row_diff,
+                    second: v[i].second - col_diff,
                 }
 
-                // row_diff := v[j].first - v[i].first
-                // col_diff := v[j].second - v[i].second
-                // up := Pair{
-                //     first: v[i].first - row_diff,
-                //     second: v[i].second - col_diff,
-                // }
+                down := Pair{
+                    first: v[j].first + row_diff,
+                    second: v[j].second + col_diff,
+                }
 
-                // down := Pair{
-                //     first: v[j].first + row_diff,
-                //     second: v[j].second + col_diff,
-                // }
-
-                // if P(up.first, up.second) && (a[up.first][up.second] == '.' || a[up.first][up.second] == '#' || a[up.first][up.second] ==  k) {
-                //     a[up.first][up.second] = '#'
-                //     cnt++
-                // }
-                // if P(down.first, down.second) && (a[down.first][down.second] == '.' || a[down.first][down.second] == '#' || a[down.first][down.second] == k) {
-                //     a[down.first][down.second] = '#'
-                //     cnt++
-                // }
-
-                // if P(up.first, up.second) {
-                //     a[up.first][up.second] = '#'
-                //     cnt++
-                // }
-                // if P(down.first, down.second) {
-                //     a[down.first][down.second] = '#'
-                //     cnt++
-                // }
-
-                // if P(up.first, up.second) && a[up.first][up.second] == '#' {
-                //     a[up.first][up.second] = '#'
-                //     cnt++
-                // }
-                // if P(down.first, down.second) && a[down.first][down.second] == '#' {
-                //     a[down.first][down.second] = '#'
-                //     cnt++
-                // }
-
-                // if P(up.first, up.second) && (a[up.first][up.second] == '.' || a[up.first][up.second] == '#') {
-                //     a[up.first][up.second] = '#'
-                //     cnt++
-                // }
-                // if P(down.first, down.second) && (a[down.first][down.second] == '.' || a[down.first][down.second] == '#') {
-                //     a[down.first][down.second] = '#'
-                //     cnt++
-                // }
+                if P(up.first, up.second) && a[up.first][up.second] != '#' {
+                    cnt++
+                    a[up.first][up.second] = '#'
+                }
+                if P(down.first, down.second) && a[down.first][down.second] != '#' {
+                    cnt++
+                    a[down.first][down.second] = '#'
+                }
             }
         }
+
 
     }
 
@@ -261,6 +231,7 @@ func first() {
 
 func second() {
 
+    var a [][]byte
     end := false
     for !end {
 
@@ -270,10 +241,81 @@ func second() {
         }
 
         line = strings.TrimSpace(line)
-
+        a = append(a, []byte(line))
 
     }
 
+    n, m := len(a), len(a[0])
+    d := make(map[byte][]Pair)
+    for i := 0; i < n; i++ {
+        for j := 0; j < m; j++ {
+            if a[i][j] == '.' || a[i][j] == '#' {
+                continue
+            }
+            if _, ex := d[a[i][j]]; !ex {
+                d[a[i][j]] = make([]Pair, 0)
+            }
+            d[a[i][j]] = append(d[a[i][j]], Pair{
+                first: i,
+                second: j,
+            })
+        }
+    }
+
+    P := func(x, y int) bool {
+        return x >= 0 && y >= 0 && x < n && y < m
+    }
+
+    cnt := 0
+    for _, v := range d {
+        cnt += len(v)
+        for i := 0; i < len(v); i++ {
+            for j := i + 1; j < len(v); j++ {
+                row_diff := v[j].first - v[i].first
+                col_diff := v[j].second - v[i].second
+
+                // fprintf("v[i] = {%d %d} and v[j] = {%d %d} and row_diff = %d and col_diff = %d\n", v[i].first, v[i].second, v[j].first, v[j].second, row_diff, col_diff)
+
+                x, y := v[i].first - row_diff, v[i].second - col_diff
+                for P(x, y) {
+
+                    if a[x][y] == '.' {
+                        a[x][y] = '#'
+                        cnt++
+                    }
+
+                    x, y = x - row_diff, y - col_diff
+
+                }
+
+                x, y = v[j].first + row_diff, v[j].second + col_diff
+                for P(x, y) {
+
+                    if a[x][y] == '.' {
+                        a[x][y] = '#'
+                        cnt++
+                    }
+
+                    x, y = x + row_diff, y + col_diff
+
+                }
+
+            }
+        }
+
+        // fprintf("\n\n\n")
+    }
+
+    for _, s := range a {
+        for _, c := range s {
+            fprintf("%c", c)
+        }
+        fprintf("\n")
+    }
+    fprintf("\n")
+
+
+    fprintf("CNT = %d\n", cnt)
 
 
 
@@ -320,8 +362,8 @@ func main() {
     // fscanf("%d\n", &tt)
  
     for i := 0; i < tt; i++ {
-        first()
-        // second()
+        // first()
+        second()
     }
  
 }
