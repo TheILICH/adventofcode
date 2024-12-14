@@ -260,25 +260,6 @@ func second() {
         },
     }
 
-    // internal := []Corner{
-    //     {
-    //         dx: []int{-1, 0},
-    //         dy: []int{0, -1},
-    //     },
-    //     {
-    //         dx: []int{-1, 0},
-    //         dy: []int{0, +1},
-    //     },
-    //     {
-    //         dx: []int{+1, 0},
-    //         dy: []int{0, -1},
-    //     },
-    //     {
-    //         dx: []int{+1, 0},
-    //         dy: []int{0, +1},
-    //     },
-    // }
-
     P := func(x, y int) bool {
         return x >= 0 && y >= 0 && x < n && y < m
     }
