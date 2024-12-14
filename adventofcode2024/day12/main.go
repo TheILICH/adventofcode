@@ -211,6 +211,7 @@ func first() {
 
 func second() {
 
+    var a [][]byte
     end := false
     for !end {
 
@@ -220,8 +221,136 @@ func second() {
         }
 
         line = strings.TrimSpace(line)
+        a = append(a, []byte(line))
 
     }
+
+    n, m := len(a), len(a[0])
+    dx := []int{0, 0, -1, +1}
+    dy := []int{-1, +1, 0, 0}
+    was := make([][]bool, n)
+    for i := 0; i < n; i++ {
+        was[i] = make([]bool, m)
+        for j := 0; j < m; j++ {
+            was[i][j] = false
+        }
+    }
+
+    type Corner struct {
+        dx []int
+        dy []int
+    }
+
+    corners := []Corner{
+        {
+            dx: []int{-1, 0},
+            dy: []int{0, -1},
+        },
+        {
+            dx: []int{-1, 0},
+            dy: []int{0, +1},
+        },
+        {
+            dx: []int{+1, 0},
+            dy: []int{0, -1},
+        },
+        {
+            dx: []int{+1, 0},
+            dy: []int{0, +1},
+        },
+    }
+
+    // internal := []Corner{
+    //     {
+    //         dx: []int{-1, 0},
+    //         dy: []int{0, -1},
+    //     },
+    //     {
+    //         dx: []int{-1, 0},
+    //         dy: []int{0, +1},
+    //     },
+    //     {
+    //         dx: []int{+1, 0},
+    //         dy: []int{0, -1},
+    //     },
+    //     {
+    //         dx: []int{+1, 0},
+    //         dy: []int{0, +1},
+    //     },
+    // }
+
+    P := func(x, y int) bool {
+        return x >= 0 && y >= 0 && x < n && y < m
+    }
+
+    cnt := 0
+    cor := 0
+
+    var dfs func(x, y int)
+    dfs = func(x, y int) {
+
+        cnt++
+        was[x][y] = true
+
+        for _, corner := range corners {
+            ok := true
+            internal := false
+            first, second := 0, 0
+            for k := 0; k < 2; k++ {
+                nx, ny := x + corner.dx[k], y + corner.dy[k]
+                if corner.dx[k] != 0 {
+                    first = corner.dx[k]
+                } 
+                if corner.dy[k] != 0 {
+                    second = corner.dy[k]
+                }
+
+                if P(nx, ny) && a[nx][ny] == a[x][y] {
+                    ok = false
+                }
+
+            }
+
+            xx, yy := x + first, y + second
+            if P(x + first, y) && a[x + first][y] == a[x][y] && 
+            P(x, y + second) && a[x][y + second] == a[x][y] && 
+            P(xx, yy) && a[xx][yy] != a[x][y] {
+                internal = true
+            }
+
+            if ok || internal {
+                cor++
+            } 
+
+        }
+
+
+        for k := 0; k < 4; k++ {
+            nx, ny := x + dx[k], y + dy[k]
+            if !P(nx, ny) || was[nx][ny] || a[nx][ny] != a[x][y] {
+                continue
+            }
+
+            dfs(nx, ny)
+        }
+
+    }
+
+    res := 0
+    for i := 0; i < n; i++ {
+        for j := 0; j < m; j++ {
+            if !was[i][j] {
+                cnt, cor = 0, 0
+                dfs(i, j)
+                res += cnt * cor
+            }
+        }
+    }
+
+    fprintf("RES = %d\n", res)
+
+
+
 
 
 
@@ -268,8 +397,8 @@ func main() {
     // fscanf("%d\n", &tt)
  
     for i := 0; i < tt; i++ {
-        first()
-        // second()
+        // first()
+        second()
     }
  
 }
