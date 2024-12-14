@@ -290,7 +290,8 @@ func second() {
     }
 
     ans := -1
-    for mul := 0; mul < 500; mul++ {
+    var b [][]byte
+    for mul := 43; mul < 44; mul++ {
         for i := range a {
             x, y, vx, vy := a[i].x, a[i].y, a[i].vx, a[i].vy
 
@@ -305,7 +306,7 @@ func second() {
 
         }
 
-        b := make([][]byte, n)
+        b = make([][]byte, n)
         for i := 0; i < n; i++ {
             b[i] = make([]byte, m)
             for j := 0; j < m; j++ {
@@ -323,7 +324,7 @@ func second() {
                 cnt = 0
                 if !was[i][j] && b[i][j] != '.' {
                     dfs(i, j, b)
-                    if cnt > 20 && ans == -1 {
+                    if cnt > 5 && ans == -1 {
                         ans = mul
                         goto end
                     }
@@ -344,6 +345,12 @@ func second() {
     //     fprintf("x, y = %d, %d and vx, vy = %d, %d\n", robot.x, robot.y, robot.vx, robot.vy)
     // }
     // fprintf("\nAFTER\n\n\n\n\n\n\n")
+
+
+    for w := 0; w < n; w++ {
+        fprintf("%s\n", string(b[w]))
+    }
+    fprintf("\n")
 
 end:
     fprintf("ANS = %d\n", ans)
@@ -392,8 +399,8 @@ func main() {
     // fscanf("%d\n", &tt)
  
     for i := 0; i < tt; i++ {
-        first()
-        // second()
+        // first()
+        second()
     }
  
 }
