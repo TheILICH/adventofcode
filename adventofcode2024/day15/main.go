@@ -255,27 +255,6 @@ func second() {
         } 
     }
 
-    c := make([]Robot, n)
-    for i := 0; i < n; i++ {
-        c[i] = Robot{
-            x: a[i].x,
-            y: a[i].y,
-            vx: a[i].vx,
-            vy: a[i].vy,
-        }
-    }
-
-    CC := func() {
-        for i := 0; i < n; i++ {
-            a[i] = Robot{
-                x: c[i].x,
-                y: c[i].y,
-                vx: c[i].vx,
-                vy: c[i].vy,
-            }
-        }
-    }
-
     dx := []int{0, 0, -1, +1}
     dy := []int{-1, +1, 0, 0}
     was := make([][]bool, n)
@@ -313,7 +292,6 @@ func second() {
     ans := -1
     var b [][]byte
     for mul := 0; mul < 10_000; mul++ {
-        CC()
         for i := range a {
             x, y, vx, vy := a[i].x, a[i].y, a[i].vx, a[i].vy
 
@@ -337,10 +315,6 @@ func second() {
         }
 
         for _, robot := range a {
-            if b[robot.x][robot.y] == '#' {
-                ans = mul
-                goto end
-            }
             b[robot.x][robot.y] = '#'
         }
 
@@ -350,7 +324,7 @@ func second() {
                 if !was[i][j] && b[i][j] != '.' {
                     cnt = 0
                     dfs(i, j, b)
-                    if cnt > 7 && ans == -1 {
+                    if cnt > 20 && ans == -1 {
                         ans = mul
                         goto end
                     }
@@ -430,4 +404,5 @@ func main() {
     }
  
 }
+
 

@@ -233,7 +233,68 @@ func second() {
 
     }
 
-    // n := len(a)
+    T := func(x int) (int, int) {
+
+        s := strconv.Itoa(x)
+        ln := len(s)
+
+        if ln % 2 == 1 {
+            return -1, -1
+        }
+
+        l, r := s[0:ln / 2], s[ln/2:ln]
+        l_int, _ := strconv.Atoi(l)
+        r_int, _ := strconv.Atoi(r)
+
+        return l_int, r_int
+
+    }
+
+    M := func(x, y int) string {
+        return strconv.Itoa(x) + "," + strconv.Itoa(y)
+    }
+    
+    memo := make(map[string]int)
+    var dfs func(x, cnt int) int
+    dfs = func(x, cnt int) int {
+
+        if cnt == 0 {
+            return 1
+        }
+
+        key := M(x, cnt)
+
+        if v, ex := memo[key]; ex {
+            return v
+        } 
+
+        if x == 0 {
+            memo[key] = dfs(1, cnt - 1)
+            return memo[key]
+        }
+
+        l, r := T(x)
+        if l != -1 && r != -1 {
+            memo[key] = dfs(l, cnt - 1) + dfs(r, cnt - 1)
+            return memo[key]
+        }
+
+        memo[key] = dfs(x * 2024, cnt - 1)
+        return memo[key]
+
+    }
+
+    sm := 0
+    for _, x := range a {
+        sm += dfs(x, 75)
+    }
+
+    fprintf("SM = %d\n", sm)
+    // k := "125,25"
+    // fprintf("memo[%s] = %d\n", k, memo[k])
+
+
+
 
 
 }
@@ -261,8 +322,8 @@ func main() {
     // r = bufio.NewReader(os.Stdin)
     w = bufio.NewWriter(os.Stdout)
 
-    file_name := "example.txt"
-    // file_name := "f.in"
+    // file_name := "example.txt"
+    file_name := "f.in"
  
     fin, _ := os.Open(file_name)
     defer fin.Close()
