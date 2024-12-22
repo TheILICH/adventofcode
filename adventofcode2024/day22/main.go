@@ -247,6 +247,8 @@ func second() {
         return n
     }
 
+    // d := []int{-9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+
     mp := make(map[string]map[int]int)
 
     for unique, x := range a {
@@ -291,6 +293,50 @@ func second() {
         }
         mx = max(mx, curr_sm)
     }
+
+    // dln := len(d)
+    // for one := 0; one < dln; one++ {
+    //     for two := 0; two < dln; two++ {
+    //         for three := 0; three < dln; three++ {
+    //             for four := 0; four < dln; four++ {
+
+    //                 curr_sm := 0
+
+    //                 for _, b := range big {
+                        
+    //                     // fprintf("x = %d and b = %v\n", x, b)
+
+    //                     // was := false
+
+    //                     for i := 4; i < len(b); i++ {
+    //                         onex := b[i - 3] - b[i - 4]
+    //                         twox := b[i - 2] - b[i - 3]
+    //                         threex := b[i - 1] - b[i - 2]
+    //                         fourx := b[i] - b[i - 1]
+
+    //                         if onex == d[one] && twox == d[two] && threex == d[three] && fourx == d[four] {
+
+    //                             // if d[one] == -2 && d[two] == 1 && d[three] == -1 && d[four] == 3 && !was {
+    //                                 // fprintf("buyer = %d i = %d and b[i] = %d\n", b[0], i, b[i])
+    //                             //     was = true
+    //                             // }
+
+
+    //                             // fprintf("seq = %d, %d, %d, %d and current number one index %d is  b[i] = %d\n", d[one], d[two], d[three], d[four], i, b[i])
+    //                             curr_sm += b[i]
+    //                             break
+    //                         }
+    //                     }
+    //                 }
+
+    //                 mx = max(curr_sm, mx)
+
+    //             }
+    //         }
+    //     }
+    // }
+
+
 
 
     fprintf("MX = %d\n", mx)
